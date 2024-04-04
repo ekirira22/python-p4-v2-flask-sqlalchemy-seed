@@ -1,0 +1,14 @@
+from models import db
+
+# define a model class by inheriting from db.Model.
+class Owner(db.Model):
+    __tablename__ = 'owners'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String)
+    address = db.Column(db.String)
+    # pet_id = db.Column(db.Integer, db.ForeignKey('pets.id'))
+
+    def __repr__(self) -> str:
+        return f'<Owner {self.id}, {self.first_name}, {self.last_name}, {self.address}>'
