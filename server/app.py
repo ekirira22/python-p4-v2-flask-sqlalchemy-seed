@@ -18,6 +18,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 # configure flag to disable modification tracking and use less memory
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+#configures json not to be displayed in a single line
+app.json.compact = False
+
 # create a Migrate object to manage schema modifications
 migrate = Migrate(app, db)
 
@@ -28,14 +31,31 @@ db.init_app(app)
     SERVING DATABASE RECORDS IN FLASK APP
 '''
 
+@app.route('/')
+def index():
+    response_body = {
+        'message' : 'Welcome to the Pet directorate'
+    }
+    response = make_response(
+        response_body,
+        200
+    )
+    return response
+
 @app.route('/pets/<int:id>')
 def pet_by_id(id):
     pet = Pet.query.filter(Pet.id == id).first()
     if pet:
-        response_body = f'<p>{pet.name} {pet.species}'
+        response_body = {
+            'id' : pet.id,
+            'name' : pet.name,
+            'species' : pet.species
+        }
         response_status = 200
     else:
-        response_body = f'<p>Pet {id} not found'
+        response_body = {
+            'message' : f'Pet of ID:{id} not found'
+        }
         response_status = 404
 
     response = make_response(
@@ -46,15 +66,27 @@ def pet_by_id(id):
 
 @app.route('/pets/<string:species>')
 def pet_by_species(species):
-    pets = Pet.query.filter_by(species = species).all()
-    response_body = f'<p>There are {len(pets)} {species}\'s</p>'
+    pets_db = Pet.query.filter_by(species = species).all()
+    pets = []
 
-    if pets:
-        for pet in pets:
-            response_body += f'<p>{pet.name} | {pet.species}</p>'
+    if pets_db:
+        for pet in pets_db:
+            pet_dict = {
+                'id' : pet.id,
+                'name' : pet.name,
+                'species' : pet.species
+            }
+            pets.append(pet_dict)
+        
+        response_body = {
+            'count' : len(pets),
+            'pets' : pets
+        }
         response_status = 200
     else:
-        response_body = f'<p>Pet {species} not found'
+        response_body = {
+            'message' : f'Pet of species: {species} not found'
+        }
         response_status = 404
 
     response = make_response(
