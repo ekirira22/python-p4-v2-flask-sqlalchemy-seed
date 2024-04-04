@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+from sqlalchemy_serializer import SerializerMixin 
 
 # contains definitions of tables and associated schema constructs
 metadata = MetaData()

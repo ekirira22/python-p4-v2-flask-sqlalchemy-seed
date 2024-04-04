@@ -46,11 +46,7 @@ def index():
 def pet_by_id(id):
     pet = Pet.query.filter(Pet.id == id).first()
     if pet:
-        response_body = {
-            'id' : pet.id,
-            'name' : pet.name,
-            'species' : pet.species
-        }
+        response_body = pet.to_dict()
         response_status = 200
     else:
         response_body = {
@@ -71,12 +67,7 @@ def pet_by_species(species):
 
     if pets_db:
         for pet in pets_db:
-            pet_dict = {
-                'id' : pet.id,
-                'name' : pet.name,
-                'species' : pet.species
-            }
-            pets.append(pet_dict)
+            pets.append(pet.to_dict())
         
         response_body = {
             'count' : len(pets),

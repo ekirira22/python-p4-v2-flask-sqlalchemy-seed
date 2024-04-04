@@ -1,7 +1,7 @@
-from models import db
+from models import db, SerializerMixin
 
 # define a model class by inheriting from db.Model.
-class Pet(db.Model):
+class Pet(db.Model, SerializerMixin):
     __tablename__ = 'pets'
 
     id = db.Column(db.Integer, primary_key=True)

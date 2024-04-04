@@ -1,7 +1,7 @@
-from models import db
+from models import db, SerializerMixin
 
 # define a model class by inheriting from db.Model.
-class Owner(db.Model):
+class Owner(db.Model, SerializerMixin):
     __tablename__ = 'owners'
 
     id = db.Column(db.Integer, primary_key=True)
