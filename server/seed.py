@@ -24,11 +24,21 @@ with app.app_context():
     # Add some Pet instances to the list. Let's add 10
     for n in range(10):
         pets.append(Pet(name = fake.first_name(), species = rc(species)))
-        owners.append(Owner(first_name = fake.first_name(), last_name = fake.last_name(), address = fake.address()))
+
 
     # Insert each Pet in the list into the database table
     db.session.add_all(pets)
-    db.session.add_all(owners)
+    db.session.commit()
 
-    # Commit the transaction
+    # store all IDs
+    ids = [pet.id for pet in Pet.query.all()]
+
+    # Insert Owners
+
+    # Add some Owners instances to the list. Let's add 10
+    for n in range(10):
+        owners.append(Owner(first_name = fake.first_name(), last_name = fake.last_name(), address = fake.address(), pet_id = rc(ids)))
+
+    # Insert each Owner in the list into the database table
+    db.session.add_all(owners)
     db.session.commit()
